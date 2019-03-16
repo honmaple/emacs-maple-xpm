@@ -1,2 +1,2 @@
 # emacs-maple-xpm
-create xpm image
+Beautiful string separators by xpm image.
