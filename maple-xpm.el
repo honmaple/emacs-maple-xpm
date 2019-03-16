@@ -28,17 +28,17 @@
   "Create xpm image."
   :group 'maple)
 
-(defcustom maple-xpm-style 'wave
+(defcustom maple-xpm-style 'default
   "Xpm image style."
   :group 'maple-xpm
-  :type '(choice (const wave)
+  :type '(choice (const default)
+                 (const wave)
                  (const bar)
                  (const slant)
                  (const contour)
                  (const box)
                  (const butt)
-                 (const curve)
-                 (const utf8)))
+                 (const curve)))
 
 (defcustom maple-xpm-height (- (elt (window-pixel-edges) 3)
                                (elt (window-inside-pixel-edges) 3))
@@ -188,7 +188,7 @@ This should be an even number."
              (make-list 1 2)
              (make-list (max 0 (- 10 x)) 1)))))
 
-(defun maple-xpm-utf8 (face1 face2 &optional reverse height width)
+(defun maple-xpm-default (face1 face2 &optional reverse height width)
   "FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
   (ignore height) (ignore width)
   (propertize
