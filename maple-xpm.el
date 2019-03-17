@@ -192,9 +192,9 @@ This should be an even number."
   "FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
   (ignore height) (ignore width)
   (propertize
-   (char-to-string (if reverse #xe0b2 #xe0b0))
-   'face (list :background (maple-xpm--background (if reverse face1 face2))
-               :foreground (maple-xpm--background (if reverse face2 face1)))))
+   (char-to-string (if reverse #xe0b0 #xe0b2))
+   'face (list :background (maple-xpm--background (if reverse face2 face1))
+               :foreground (maple-xpm--background (if reverse face1 face2)))))
 
 (provide 'maple-xpm)
 ;;; maple-xpm.el ends here
