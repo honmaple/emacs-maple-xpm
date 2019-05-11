@@ -51,7 +51,8 @@ This should be an even number."
 
 (defun maple-xpm--background (face)
   "Get FACE background."
-  (face-attribute face :background nil 'default))
+  (if (listp face) (or (plist-get face :background) (face-attribute 'default :background))
+    (face-attribute face :background nil 'default)))
 
 (defun maple-xpm--height ()
   "Get default height."
