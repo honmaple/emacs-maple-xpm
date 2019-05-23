@@ -66,6 +66,10 @@ This should be an even number."
   "PATTERN."
   (mapcar 'reverse pattern))
 
+(defun maple-xpm-reset(&rest _)
+  "Reset xpm cache."
+  (setq maple-xpm-cache nil))
+
 (defun maple-xpm-draw(face1 face2 &optional reverse height width)
   "Draw FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
   (let ((key (list maple-xpm-style face1 face2 height reverse)))
@@ -196,6 +200,8 @@ This should be an even number."
    (char-to-string (if reverse #xe0b2 #xe0b0))
    'face (list :background (maple-xpm--background (if reverse face1 face2))
                :foreground (maple-xpm--background (if reverse face2 face1)))))
+
+(advice-add 'load-theme :after #'maple-xpm-reset)
 
 (provide 'maple-xpm)
 ;;; maple-xpm.el ends here
