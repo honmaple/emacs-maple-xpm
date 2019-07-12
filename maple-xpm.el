@@ -215,7 +215,7 @@ This should be an even number."
   (let* ((color1 (maple-xpm--background face1))
          (color2 (maple-xpm--background face2))
          (height (or height (maple-xpm--height)))
-         (width  (or width 16))
+         (width  (or width 13))
          (number -1))
     (create-image
      (format "/* XPM */ static char * gradient[] = {\"%s %s %s 1\", %s %s};"

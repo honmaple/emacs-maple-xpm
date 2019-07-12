@@ -1,0 +1,32 @@
+* emacs-maple-xpm
+  Beautiful string separators by xpm image.
+
+** screenshots
+   - default
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/default.png]]
+   - wave
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/wave.png]]
+   - slant
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/slant.png]]
+   - box
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/box.png]]
+   - gradient
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/gradient.png]]
+   - butt
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/butt.png]]
+   - contour
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/contour.png]]
+   - curve
+     [[https://github.com/honmaple/emacs-maple-xpm/blob/master/screenshot/curve.png]]
+     
+** usage
+   #+begin_src elisp
+     (use-package maple-xpm
+       :ensure nil
+       :config
+       (setq maple-xpm-style 'wave)
+       (maple-xpm-draw face0 face1)
+       ;; or
+       (maple-xpm-draw face0 face1 nil nil nil 'wave))
+   #+end_src
+
