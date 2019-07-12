@@ -24,6 +24,8 @@
 ;;
 
 ;;; Code:
+(require 'color)
+
 (defgroup maple-xpm nil
   "Create xpm image."
   :group 'maple)
@@ -33,12 +35,14 @@
   :group 'maple-xpm
   :type '(choice (const default)
                  (const wave)
+                 (const line)
                  (const bar)
                  (const slant)
                  (const contour)
                  (const box)
                  (const butt)
-                 (const curve)))
+                 (const curve)
+                 (const gradient)))
 
 (defcustom maple-xpm-height (- (elt (window-pixel-edges) 3)
                                (elt (window-inside-pixel-edges) 3))
@@ -48,6 +52,9 @@ This should be an even number."
   :group 'maple-xpm)
 
 (defvar maple-xpm-cache nil)
+(defvar maple-xpm-chars
+  (append (mapcar 'number-to-string (number-sequence 0 9))
+          (mapcar 'char-to-string (number-sequence ?a ?z))))
 
 (defun maple-xpm--background (face)
   "Get FACE background."
@@ -64,7 +71,7 @@ This should be an even number."
 
 (defun maple-xpm--string(pattern)
   "To string with PATTERN."
-  (concat "\"" (mapconcat 'number-to-string pattern "") "\","))
+  (concat "\"" (mapconcat (lambda(x) (format "%s" x)) pattern "") "\","))
 
 (defun maple-xpm--reverse(pattern)
   "PATTERN."
@@ -74,13 +81,14 @@ This should be an even number."
   "Reset xpm cache."
   (setq maple-xpm-cache nil))
 
-(defun maple-xpm-draw(face1 face2 &optional reverse height width)
-  "Draw FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
-  (let ((key (list maple-xpm-style face1 face2 height reverse)))
+(defun maple-xpm-draw(face1 face2 &optional reverse height width style)
+  "Draw FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH STYLE."
+  (let* ((style (or style maple-xpm-style))
+         (func (intern (format "maple-xpm-%s" style)))
+         (key (list style face1 face2 height reverse)))
     (or (cdr (assoc key maple-xpm-cache))
-        (let ((image (propertize " " 'display
-                                 (funcall (intern (format "maple-xpm-%s" maple-xpm-style))
-                                          face1 face2 reverse height width))))
+        (let ((image (propertize
+                      " " 'display (funcall func face1 face2 reverse height width))))
           (push (cons key image) maple-xpm-cache) image))))
 
 (defmacro maple-xpm-define (name center &optional header footer)
@@ -121,6 +129,10 @@ This should be an even number."
                               (mapconcat 'identity footer-pattern ""))))
             'xpm t
             :ascent 'center))))))
+
+
+(maple-xpm-define line
+  '((2)))
 
 (maple-xpm-define bar
   '((2 2)))
@@ -196,6 +208,31 @@ This should be an even number."
      (append (make-list x 0)
              (make-list 1 2)
              (make-list (max 0 (- 10 x)) 1)))))
+
+(defun maple-xpm-gradient (face1 face2 &optional reverse height width)
+  "FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
+  (ignore reverse)
+  (let* ((color1 (maple-xpm--background face1))
+         (color2 (maple-xpm--background face2))
+         (height (or height (maple-xpm--height)))
+         (width  (or width 16))
+         (number -1))
+    (create-image
+     (format "/* XPM */ static char * gradient[] = {\"%s %s %s 1\", %s %s};"
+             width height width
+             (mapconcat
+              (lambda(x)
+                (setq number (+ number 1))
+                (format "\"%s c %s\"," (nth number maple-xpm-chars) (apply 'color-rgb-to-hex x)))
+              (color-gradient
+               (color-name-to-rgb color1)
+               (color-name-to-rgb color2) width) "")
+             (mapconcat
+              'identity
+              (make-list height (maple-xpm--string
+                                 (subseq maple-xpm-chars 0 (min width (length maple-xpm-chars))))) ""))
+     'xpm t
+     :ascent 'center)))
 
 (defun maple-xpm-default (face1 face2 &optional reverse height width)
   "FACE1 FACE2 &OPTIONAL REVERSE HEIGHT WIDTH."
