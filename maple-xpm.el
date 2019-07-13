@@ -42,6 +42,7 @@
                  (const box)
                  (const butt)
                  (const curve)
+                 (const zigzag)
                  (const gradient)))
 
 (defcustom maple-xpm-height (- (elt (window-pixel-edges) 3)
@@ -199,6 +200,14 @@ This should be an even number."
     (0 0 1 1)
     (2 1 1 1)
     (1 1 1 1)))
+
+(maple-xpm-define zigzag
+  '((1 1 1)
+    (0 1 1)
+    (0 0 1)
+    (0 0 0)
+    (0 0 1)
+    (0 1 1)))
 
 (maple-xpm-define slant
   nil
