@@ -52,10 +52,35 @@ This should be an even number."
   :type 'integer
   :group 'maple-xpm)
 
+(defcustom maple-xpm-darwin (eq system-type 'darwin)
+  "Whether system is macbook."
+  :type 'boolean
+  :group 'maple-xpm)
+
 (defvar maple-xpm-cache nil)
 (defvar maple-xpm-chars
   (append (mapcar 'number-to-string (number-sequence 0 9))
           (mapcar 'char-to-string (number-sequence ?a ?z))))
+
+(defun maple-xpm--apple-color (color)
+  "Covert COLOR within apple machine."
+  (pcase-let*
+      ((`(,r ,g ,b) (color-name-to-rgb color))
+       (`(,x ,y ,z) (color-srgb-to-xyz r g b))
+       (r (expt (+ (* 3.2404542 x) (* -1.5371385 y) (* -0.4985314 z))
+                (/ 1.8)))
+       (g (expt (+ (* -0.9692660 x) (* 1.8760108 y) (* 0.0415560 z))
+                (/ 1.8)))
+       (b (expt (+ (* 0.0556434 x) (* -0.2040259 y) (* 1.0572252 z))
+                (/ 1.8))))
+    (color-rgb-to-hex r g b)))
+
+(defun maple-xpm--color (face)
+  "Covert COLOR with FACE."
+  (let ((color (maple-xpm--background face)))
+    (if maple-xpm-darwin
+        (maple-xpm--apple-color color)
+      (apply 'color-rgb-to-hex (color-name-to-rgb color)))))
 
 (defun maple-xpm--background (face)
   "Get FACE background."
@@ -101,8 +126,8 @@ This should be an even number."
        (when window-system
          (when reverse (setq face1 (prog1 face2 (setq face2 face1))))
          (let* ((name (replace-regexp-in-string "-" "_" ,-name))
-                (color1 (or (maple-xpm--background face1) "None"))
-                (color2 (or (maple-xpm--background face2) "None"))
+                (color1 (or (maple-xpm--color face1) "None"))
+                (color2 (or (maple-xpm--color face2) "None"))
                 (color3 color1)
                 (height (or height (maple-xpm--height)))
                 (width (or width (length (or (car ,center) (car ,header) (car ,footer)))))
