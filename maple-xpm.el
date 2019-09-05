@@ -52,7 +52,8 @@ This should be an even number."
   :type 'integer
   :group 'maple-xpm)
 
-(defcustom maple-xpm-darwin (eq system-type 'darwin)
+(defcustom maple-xpm-darwin (and (eq system-type 'darwin)
+                                 (not (boundp 'mac-carbon-version-string)))
   "Whether system is macbook."
   :type 'boolean
   :group 'maple-xpm)
