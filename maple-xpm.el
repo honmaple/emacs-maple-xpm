@@ -124,7 +124,7 @@ This should be an even number."
            (doc-string 2))
   (let* ((-name (format "%s" name)))
     `(defun ,(intern (format "maple-xpm-%s" -name)) (face1 face2 &optional reverse height width)
-       (when window-system
+       (when (display-graphic-p)
          (when reverse (setq face1 (prog1 face2 (setq face2 face1))))
          (let* ((name (replace-regexp-in-string "-" "_" ,-name))
                 (color1 (or (maple-xpm--color face1) "None"))
