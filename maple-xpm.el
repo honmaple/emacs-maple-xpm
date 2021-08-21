@@ -265,7 +265,7 @@ This should be an even number."
              (mapconcat
               'identity
               (make-list height (maple-xpm--string
-                                 (subseq maple-xpm-chars 0 (min width (length maple-xpm-chars))))) ""))
+                                 (cl-subseq maple-xpm-chars 0 (min width (length maple-xpm-chars))))) ""))
      'xpm t
      :ascent 'center)))
 
